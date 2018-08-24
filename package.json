@@ -1,0 +1,51 @@
+{
+  "name": "imitationwriter",
+  "version": "0.1.0",
+  "main": "public/electron.js",
+  "homepage": "./",
+  "private": true,
+  "dependencies": {
+    "codemirror": "^5.39.2",
+    "electron-is-dev": "^0.3.0",
+    "lodash": "^4.17.10",
+    "pdfjs-dist": "2.0.550",
+    "python-shell": "^0.5.0",
+    "react": "^16.4.1",
+    "react-codemirror2": "^5.1.0",
+    "react-dom": "^16.4.1",
+    "react-dropzone": "^4.3.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "react-split-pane": "^0.1.82",
+    "redux": "^4.0.0",
+    "webpack": "4.0.0",
+    "xhr2": "^0.1.4"
+  },
+  "scripts": {
+    "electron-pack": "build --dir",
+    "preelectron-pack": "yarn build",
+    "electron-start": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "concurrently": "^3.6.1",
+    "electron": "^2.0.5",
+    "electron-builder": "^20.26.0",
+    "wait-on": "^2.1.0"
+  },
+  "build": {
+    "appId": "pdfstater",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  }
+}

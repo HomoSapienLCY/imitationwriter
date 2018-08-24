@@ -1,0 +1,151 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  var Pos = CodeMirror.Pos;
+
+  function forEach(arr, f) {
+    for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
+  }
+
+  function arrayContains(arr, item) {
+    if (!Array.prototype.indexOf) {
+      var i = arr.length;
+      while (i--) {
+        if (arr[i] === item) {
+          return true;
+        }
+      }
+      return false;
+    }
+    return arr.indexOf(item) != -1;
+  }
+
+  // construct hint option from keywordlist
+  // keywords contain the list of hint words for completion
+  // getToken is the function that returns a token which is
+  // the token at the cursor
+  function scriptHint(editor, keywords, getToken, options) {
+    // Find the token at the cursor
+    // token contains the partial strings and its location
+    var cur = editor.getCursor(), token = getToken(editor, cur);
+    // token.type gives the type of the token (variable, operator,
+    // comment, etc, exit if it is comment)
+    // here, check with regex
+    if (/\b(?:string|comment)\b/.test(token.type)) return;
+    // retrieve the mode
+    var innerMode = CodeMirror.innerMode(editor.getMode(), token.state);
+    // not handling json
+    if (innerMode.mode.helperType === "json") return;
+    token.state = innerMode.state;
+
+    // If it's not a 'word-style' token, ignore the token.
+    // here, check with regex
+    if (!/^[\w$_]*$/.test(token.string)) {
+      token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
+               type: token.string == "." ? "property" : null};
+    } else if (token.end > cur.ch) {
+      token.end = cur.ch;
+      token.string = token.string.slice(0, cur.ch - token.start);
+    }
+
+    var tprop = token;
+    // If it is a property, find out what it is a property of.
+    // check for type property
+    // for instance: apple.core, core is the property, which is
+    // identified with "."
+    while (tprop.type == "property") {
+      tprop = getToken(editor, Pos(cur.line, tprop.start));
+      if (tprop.string != ".") return;
+      tprop = getToken(editor, Pos(cur.line, tprop.start));
+      if (!context) var context = [];
+      context.push(tprop);
+    }
+    // list is a list of candidate words
+    return {list: getCompletions(token, context, keywords, options),
+            from: Pos(cur.line, token.start),
+            to: Pos(cur.line, token.end)};
+  }
+
+  function unigramToken(e, cur) {
+    return e.getTokenAt(cur);
+  }
+
+  // each bigram has 3 tokens, including an operator or
+  // space in between
+  function bigramToken(e, cur) {
+    token_list = e.getLineTokens(cur.line);
+    token_3 = token_list.pop();
+    token_2 = token_list.pop();
+    token_1 = token_list.pop();
+
+    temp_token = token_3;
+    temp_token.end = token_3.end;
+    temp_token.start = token_1.start;
+    temp_token.state = token_3.state;
+    temp_token.string = token_1.string + token_2.string + token_3.string;
+    temp_token.type = token_3.type;
+
+    return temp_token;
+  }
+
+  function trigramToken(e, cur) {
+    token_list = e.getLineTokens(cur.line);
+    token_5 = token_list.pop();
+    token_4 = token_list.pop();
+    token_3 = token_list.pop();
+    token_2 = token_list.pop();
+    token_1 = token_list.pop();
+
+    temp_token = token_5;
+    temp_token.end = token_5.end;
+    temp_token.start = token_1.start;
+    temp_token.state = token_5.state;
+    temp_token.string = token_1.string + token_2.string + token_3.string + token_4.string + token_5.string;
+    temp_token.type = token_5.type;
+
+    return temp_token;
+  }
+
+  function javascriptHint(editor, options) {
+    return scriptHint(editor, javascriptKeywords,
+                      unigramToken,
+                      options);
+  };
+  CodeMirror.registerHelper("hint", "javascript", javascriptHint);
+
+  function getCoffeeScriptToken(editor, cur) {
+  // This getToken, it is for coffeescript, imitates the behavior of
+  // getTokenAt method in javascript.js, that is, returning "property"
+  // type and treat "." as indepenent token.
+    var token = editor.getTokenAt(cur);
+    if (cur.ch == token.start + 1 && token.string.charAt(0) == '.') {
+      token.end = token.start;
+      token.string = '.';
+      token.type = "property";
+    }
+    else if (/^\.[\w$_]*$/.test(token.string)) {
+      token.type = "property";
+      token.start++;
+      token.string = token.string.replace(/\./, '');
+    }
+    return token;
+  }
+
+  function coffeescriptHint(editor, options) {
+    return scriptHint(editor, coffeescriptKeywords, getCoffeeScriptToken, options);
+  }
+  CodeMirror.registerHelper("hint", "coffeescript", coffeescriptHint);
+
+  var stringProps = [];
+  var arrayProps = [];
+  var funcProps = [];
+  var javascriptKeywords = [];
+  var coffeescriptKeywords = [];
