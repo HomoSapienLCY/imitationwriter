@@ -1,6 +1,9 @@
 This program can read the pdf files you give it and extract the words and phrases from the document. Then it will turn into writing mode, in which it will give hint for your writing (which is supposed to be in the same field as the files you give it).
 
-
+Install the dependencies using:
+```
+yarn install
+```
 Start the program using:
 ```
 yarn run electron-dev
