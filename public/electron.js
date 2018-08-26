@@ -8,7 +8,8 @@ const path = require("path");
 
 // python analysis and generation script
 const PythonShell = require("python-shell");
-const processor_path = "processor.py";
+// the path is relative to the project folder
+const processor_path = "processors/processor.py";
 
 // = import PDFJS from "pdfjs-dist"; in react
 const PDFJS = require("pdfjs-dist");

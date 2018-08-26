@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 const electron = window.require("electron");
+// window not found
+//import { electron } from "window";
 const { ipcRenderer } = electron;
 
 class FileSelectScreen extends Component {
