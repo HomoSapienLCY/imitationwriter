@@ -21,6 +21,7 @@ class Editor extends Component {
     const options = {
       theme: "monokai",
       mode: "javascript",
+      lineWrapping: true,
       // redefine the tab key to do
       // the autocompletion
       // this function is actually never called...
