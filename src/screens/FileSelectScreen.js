@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 const electron = window.require("electron");
-// window not found
+// the following code that is commented out 
+// will cause window not found
 //import { electron } from "window";
 const { ipcRenderer } = electron;
 
