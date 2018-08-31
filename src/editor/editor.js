@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { UnControlled as CodeMirror } from "react-codemirror2";
-// hint has to be imported from the js codemirror library
 import CM from "codemirror/lib/codemirror";
 
 import "codemirror/lib/codemirror.css";
@@ -24,9 +23,6 @@ class Editor extends Component {
       lineWrapping: true,
     };
 
-    // give the classname for formating in css
-    // onKeyPress event works much better than onKeyUp, onKeyDown
-    // and onInput
     const mirrorInstance = (
       <div className="editor-screen">
         <CodeMirror
@@ -35,7 +31,6 @@ class Editor extends Component {
           options={options}
           height="100%"
           onKeyPress={(editor, event) => {
-            //console.log(event.keyCode);
             editor.showHint(CM.hint.javascript);
           }}
         />
