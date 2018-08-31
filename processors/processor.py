@@ -9,39 +9,6 @@ app = Flask(__name__)
 
 word_tables = []
 
-# legacy code using a different mechanism (posting filename
-# other than content)
-'''
-@app.route('/nexus', methods=['POST'])
-def create_task():
-    if not request.json:
-        abort(400)
-    task = {
-        'filePaths': request.json['filePaths'],
-        'done': False
-    }
-    
-    totalText = ""
-
-    filePaths = task['filePaths']
-    for fp in filePaths:
-        totalText += extract_text_by_page(fp)
-
-    word_table = generateWordTable(totalText)
-    word_tables.append(word_table)
-    whole_table = combineCounter(word_tables)
-    generateHint(whole_table)
-    top_3 = whole_table.most_common(3)
-    print(whole_table)
-    print(top_3)
-    # this line is important, if not flushed, the prints will be
-    # send only after electron exiting
-    sys.stdout.flush()
-    # 201 is the state
-    reply = {'reply': {'0': top_3[0], '1': top_3[1], '2': top_3[2]}}
-    return jsonify(reply), 201
-'''
-
 # allow user to post new data
 @app.route('/nexus', methods=['POST'])
 def create_task():
@@ -57,12 +24,12 @@ def create_task():
     whole_table = combineCounter(word_tables)
     generateHint(whole_table)
     top_3 = whole_table.most_common(3)
+    
     print(whole_table)
     print(top_3)
-    # this line is important, if not flushed, the prints will be
-    # send only after electron exiting
+    # flush out the print to command line
     sys.stdout.flush()
-    # 201 is the state
+
     reply = {'reply': {'0': top_3[0], '1': top_3[1], '2': top_3[2]}}
     return jsonify(reply), 201
 

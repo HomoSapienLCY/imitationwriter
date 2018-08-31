@@ -6,12 +6,9 @@ const { XMLHttpRequest } = require("xhr2");
 const isDev = require("electron-is-dev");
 const path = require("path");
 
-// python analysis and generation script
 const PythonShell = require("python-shell");
-// the path is relative to the project folder
 const processor_path = "processors/processor.py";
 
-// = import PDFJS from "pdfjs-dist"; in react
 const PDFJS = require("pdfjs-dist");
 PDFJS.GlobalWorkerOptions.workerSrc = "pdfjs-dist/build/pdf.worker.js";
 
@@ -45,38 +42,14 @@ function createWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
-// legacy code using a different mechanism (posting filename
-// other than content)
-/*
-function httpPostFilename(theUrl, filePaths) {
-  var data = {};
-  data.filePaths = filePaths;
-  // make data into json
-  var json = JSON.stringify(data);
-  // open http for post
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("POST", theUrl, true); // true for asynchronous
-  xmlHttp.onreadystatechange = () => {
-    // wait for the response
-    if (xmlHttp.readyState == XMLHttpRequest.DONE) {
-      mainWindow.webContents.send("hint:ready", "Success");
-    }
-  };
-  xmlHttp.setRequestHeader("Content-type", "application/json; charset=utf-8");
-  xmlHttp.send(json);
-}
-*/
-
 function httpPost(theUrl, text, pageNum) {
-  // construct and fill in data
   var data = {};
   data.pageNum = pageNum;
   data.description = text;
-  // make data into json
   var json = JSON.stringify(data);
-  // open http for post
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("POST", theUrl, true); // true for asynchronous
+  // true for asynchronous
+  xmlHttp.open("POST", theUrl, true);
   xmlHttp.onreadystatechange = () => {
     // wait for the response
     if (xmlHttp.readyState == XMLHttpRequest.DONE) {
@@ -104,7 +77,7 @@ function collectPages(doc) {
         pageText = readPage(page, pn);
       },
       reason => {
-        // PDF loading error
+        // catch PDF loading error
         console.error(reason);
       }
     );
@@ -114,7 +87,6 @@ function collectPages(doc) {
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {
-  // end python
   processor.end(function(err) {
     if (err) {
       throw err;
@@ -133,11 +105,6 @@ app.on("activate", () => {
 });
 
 ipcMain.on("files:added", (event, filePaths) => {
-  // legacy code using a different mechanism (posting filename
-  // other than content)
-  /*
-  httpPostFilename(localConnect, filePaths)
-  */
 
   _.each(filePaths, filePath => {
     renew = true;
@@ -147,7 +114,6 @@ ipcMain.on("files:added", (event, filePaths) => {
         collectPages(pdfDoc);
       },
       reason => {
-        // PDF loading error
         console.error(reason);
       }
     );
