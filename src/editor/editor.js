@@ -22,19 +22,6 @@ class Editor extends Component {
       theme: "monokai",
       mode: "javascript",
       lineWrapping: true,
-      // redefine the tab key to do
-      // the autocompletion
-      // this function is actually never called...
-      // the tab is already bind to pick in show-hint.js
-      // and it is only called when not completing
-      extraKeys: {
-        Tab: function(cm) {
-          // the hint it takes in is a function
-          // that returns the candidates
-          cm.guessYouLike(CM.hint.javascript);
-          console.log(CM.hint.javascript);
-        }
-      }
     };
 
     // give the classname for formating in css
