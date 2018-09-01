@@ -107,7 +107,6 @@ app.on("activate", () => {
 ipcMain.on("files:added", (event, filePaths) => {
 
   _.each(filePaths, filePath => {
-    renew = true;
     PDFJS.getDocument(`file://${filePath}`).then(
       pdfDoc => {
         console.log("PDF loaded");

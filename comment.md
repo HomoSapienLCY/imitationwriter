@@ -15,5 +15,5 @@
 - Comment: Shouldn't change the node_module files. Use official APIs.
 - Comment: public usually for non-dynamic: for install html or css. For codes that have logics, should be put into src (all .js).
 - Comment: Electron-react file structure (usually 1 App.js or index.js))
-- Comment: reduce comments
-- Comment: block other than inline for comments longer than 2 lines
+- Comment: reduce comments **_Check!!!!_**
+- Comment: block other than inline for comments longer than 2 lines **_Check!!!!_**
