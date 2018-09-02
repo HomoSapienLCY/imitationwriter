@@ -55,20 +55,22 @@ function httpPost(theUrl, text) {
   xmlHttp.send(json);
 }
 
+// join all text into 1
 function combineText(texts) {
   return texts.items.map(x => x.str).join(' ');
 }
 
-function collectPagePromises(docs) {
-  const pagePromises = [];
+// collect all promises from docs
+function collectDocsPromises(docs) {
+  const docsPromises = [];
   for (dn = 0; dn < docs.length; dn++) {
     let doc = docs[dn];
     for (pn = 1; pn <= doc.pdfInfo.numPages; pn++) {
-      pagePromises.push(doc.getPage(pn));
+      docsPromises.push(doc.getPage(pn));
     }
   }
 
-  return pagePromises;
+  return docsPromises;
 }
 
 app.on('ready', createWindow);
@@ -92,13 +94,17 @@ app.on('activate', () => {
 });
 
 ipcMain.on('files:added', (event, filePaths) => {
+  // open all files inputed
   const filePromises = filePaths.map(x => PDFJS.getDocument(`file://${x}`));
   Promise.all(filePromises)
-    .then(docs => collectPagePromises(docs))
+    // collect all promises from doc inputs
+    .then(docs => collectDocsPromises(docs))
     .then(pagePromises =>
       Promise.all(pagePromises)
+        // extract content promises
         .then(pages => pages.map(x => x.getTextContent()))
         .then(texts =>
+          // collect all texts and send as a string
           Promise.all(texts).then(textContents => {
             const allTextInEachDoc = textContents.map(x => combineText(x));
             const allText = allTextInEachDoc.join(' ');
