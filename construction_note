@@ -37,11 +37,13 @@ just need to add type="module" in the <script/>
 17 restart window using: .close() then = null
 18 pdfminer not work with python but pdfminer.six OK
 19 some bugs right now: python script is async, can start writing to
-file before js finishing processing. Also the hint scripts loaded by
-the editor section is the old one
-20 getTokenAt and getLineTokens are in method, which uses takeToken
+file before js finishing processing. Fixed by promise handling
+and concatenate all texts into 1 data
+20 Also the hint scripts loaded by the editor section is 
+the old one
+21 getTokenAt and getLineTokens are in method, which uses takeToken
 from the line/highlight.js
-21 get all tokens from a line, the multigram completion can be made
+22 get all tokens from a line, the multigram completion can be made
 this way: e.getLineTokens(cur.line). However need to be cautious:
 in a line " " counts as a token, also do other operators ("-" for
 instance)

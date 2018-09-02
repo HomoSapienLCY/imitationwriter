@@ -15,7 +15,6 @@ def create_task():
     if not request.json:
         abort(400)
     task = {
-        'pageNum': request.json['pageNum'],
         'description': request.json.get('description', ""),
         'done': False
     }

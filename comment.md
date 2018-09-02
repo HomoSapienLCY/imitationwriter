@@ -14,6 +14,6 @@
 - Comment: Combine all text files into a single readme, use markdown syntax to separate the section.
 - Comment: Shouldn't change the node_module files. Use official APIs.
 - Comment: public usually for non-dynamic: for install html or css. For codes that have logics, should be put into src (all .js).
-- Comment: Electron-react file structure (usually 1 App.js or index.js))
+- Comment: Electron-react file structure (usually 1 App.js or index.js)) **_Check!!!!_**
 - Comment: reduce comments **_Check!!!!_**
 - Comment: block other than inline for comments longer than 2 lines **_Check!!!!_**
