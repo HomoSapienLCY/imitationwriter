@@ -16,6 +16,7 @@
     "react-dropzone": "^4.3.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "1.1.4",
     "react-split-pane": "^0.1.82",
     "redux": "^4.0.0",
@@ -33,6 +34,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
     "concurrently": "^3.6.1",
     "electron": "^2.0.5",
     "electron-builder": "^20.26.0",
