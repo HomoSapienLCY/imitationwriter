@@ -214,6 +214,13 @@
     if (options)
       for (var prop in options)
         if (options[prop] !== undefined) out[prop] = options[prop];
+    /*
+    the original hint assignment only takes a special type of hint
+    and not script hint, thus need to assign hint to options (hint)
+    here
+    */
+    out.hint = options
+
     if (out.hint.resolve) out.hint = out.hint.resolve(cm, pos);
     return out;
   }
